@@ -1,0 +1,970 @@
+{
+  "schema_version": "1.0.0",
+  "game": "brass_birmingham",
+  "locations": [
+    {
+      "id": "stoke_on_trent",
+      "name": "Stoke-on-Trent",
+      "position": {
+        "x": 0.48,
+        "y": 0.16
+      },
+      "spaces": [
+        {
+          "id": "stoke_on_trent_1",
+          "allowed_industries": [
+            "brewery",
+            "pottery"
+          ]
+        },
+        {
+          "id": "stoke_on_trent_2",
+          "allowed_industries": [
+            "manufacturer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "leek",
+      "name": "Leek",
+      "position": {
+        "x": 0.67,
+        "y": 0.08
+      },
+      "spaces": [
+        {
+          "id": "leek_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "manufacturer"
+          ]
+        },
+        {
+          "id": "leek_2",
+          "allowed_industries": [
+            "cotton_mill",
+            "pottery"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "belper",
+      "name": "Belper",
+      "position": {
+        "x": 0.89,
+        "y": 0.08
+      },
+      "spaces": [
+        {
+          "id": "belper_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "manufacturer"
+          ]
+        },
+        {
+          "id": "belper_2",
+          "allowed_industries": [
+            "iron_works"
+          ]
+        },
+        {
+          "id": "belper_3",
+          "allowed_industries": [
+            "brewery"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stoke",
+      "name": "Stoke",
+      "position": {
+        "x": 0.37,
+        "y": 0.25
+      },
+      "spaces": [
+        {
+          "id": "stoke_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "coal_mine"
+          ]
+        },
+        {
+          "id": "stoke_2",
+          "allowed_industries": [
+            "manufacturer",
+            "iron_works"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "uttoxeter",
+      "name": "Uttoxeter",
+      "position": {
+        "x": 0.71,
+        "y": 0.24
+      },
+      "spaces": [
+        {
+          "id": "uttoxeter_1",
+          "allowed_industries": [
+            "manufacturer",
+            "coal_mine"
+          ]
+        },
+        {
+          "id": "uttoxeter_2",
+          "allowed_industries": [
+            "cotton_mill",
+            "coal_mine"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "derby",
+      "name": "Derby",
+      "position": {
+        "x": 0.91,
+        "y": 0.25
+      },
+      "spaces": [
+        {
+          "id": "derby_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "coal_mine"
+          ]
+        },
+        {
+          "id": "derby_2",
+          "allowed_industries": [
+            "manufacturer",
+            "pottery"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stafford",
+      "name": "Stafford",
+      "position": {
+        "x": 0.49,
+        "y": 0.34
+      },
+      "spaces": [
+        {
+          "id": "stafford_1",
+          "allowed_industries": [
+            "coal_mine"
+          ]
+        },
+        {
+          "id": "stafford_2",
+          "allowed_industries": [
+            "brewery"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burton_on_trent",
+      "name": "Burton-on-Trent",
+      "position": {
+        "x": 0.83,
+        "y": 0.39
+      },
+      "spaces": [
+        {
+          "id": "burton_on_trent_1",
+          "allowed_industries": [
+            "manufacturer",
+            "iron_works"
+          ]
+        },
+        {
+          "id": "burton_on_trent_2",
+          "allowed_industries": [
+            "coal_mine"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cannock",
+      "name": "Cannock",
+      "position": {
+        "x": 0.57,
+        "y": 0.46
+      },
+      "spaces": [
+        {
+          "id": "cannock_1",
+          "allowed_industries": [
+            "manufacturer",
+            "iron_works"
+          ]
+        },
+        {
+          "id": "cannock_2",
+          "allowed_industries": [
+            "iron_works"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wolverhampton",
+      "name": "Wolverhampton",
+      "position": {
+        "x": 0.45,
+        "y": 0.56
+      },
+      "spaces": [
+        {
+          "id": "wolverhampton_1",
+          "allowed_industries": [
+            "manufacturer"
+          ]
+        },
+        {
+          "id": "wolverhampton_2",
+          "allowed_industries": [
+            "manufacturer",
+            "iron_works"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coalbrookdale",
+      "name": "Coalbrookdale",
+      "position": {
+        "x": 0.28,
+        "y": 0.61
+      },
+      "spaces": [
+        {
+          "id": "coalbrookdale_1",
+          "allowed_industries": [
+            "pottery"
+          ]
+        },
+        {
+          "id": "coalbrookdale_2",
+          "allowed_industries": [
+            "iron_works"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walsall",
+      "name": "Walsall",
+      "position": {
+        "x": 0.64,
+        "y": 0.58
+      },
+      "spaces": [
+        {
+          "id": "walsall_1",
+          "allowed_industries": [
+            "pottery",
+            "manufacturer"
+          ]
+        },
+        {
+          "id": "walsall_2",
+          "allowed_industries": [
+            "coal_mine"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tamworth",
+      "name": "Tamworth",
+      "position": {
+        "x": 0.86,
+        "y": 0.52
+      },
+      "spaces": [
+        {
+          "id": "tamworth_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "iron_works"
+          ]
+        },
+        {
+          "id": "tamworth_2",
+          "allowed_industries": [
+            "cotton_mill",
+            "manufacturer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dudley",
+      "name": "Dudley",
+      "position": {
+        "x": 0.51,
+        "y": 0.7
+      },
+      "spaces": [
+        {
+          "id": "dudley_1",
+          "allowed_industries": [
+            "iron_works"
+          ]
+        },
+        {
+          "id": "dudley_2",
+          "allowed_industries": [
+            "pottery"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birmingham",
+      "name": "Birmingham",
+      "position": {
+        "x": 0.72,
+        "y": 0.72
+      },
+      "spaces": [
+        {
+          "id": "birmingham_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "manufacturer"
+          ]
+        },
+        {
+          "id": "birmingham_2",
+          "allowed_industries": [
+            "manufacturer"
+          ]
+        },
+        {
+          "id": "birmingham_3",
+          "allowed_industries": [
+            "pottery"
+          ]
+        },
+        {
+          "id": "birmingham_4",
+          "allowed_industries": [
+            "manufacturer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kidderminster",
+      "name": "Kidderminster",
+      "position": {
+        "x": 0.42,
+        "y": 0.8
+      },
+      "spaces": [
+        {
+          "id": "kidderminster_1",
+          "allowed_industries": [
+            "cotton_mill",
+            "iron_works"
+          ]
+        },
+        {
+          "id": "kidderminster_2",
+          "allowed_industries": [
+            "cotton_mill"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nuneaton",
+      "name": "Nuneaton",
+      "position": {
+        "x": 0.86,
+        "y": 0.67
+      },
+      "spaces": [
+        {
+          "id": "nuneaton_1",
+          "allowed_industries": [
+            "coal_mine"
+          ]
+        },
+        {
+          "id": "nuneaton_2",
+          "allowed_industries": [
+            "cotton_mill",
+            "iron_works"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "redditch",
+      "name": "Redditch",
+      "position": {
+        "x": 0.7,
+        "y": 0.85
+      },
+      "spaces": [
+        {
+          "id": "redditch_1",
+          "allowed_industries": [
+            "manufacturer",
+            "iron_works"
+          ]
+        },
+        {
+          "id": "redditch_2",
+          "allowed_industries": [
+            "pottery"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coventry",
+      "name": "Coventry",
+      "position": {
+        "x": 0.86,
+        "y": 0.79
+      },
+      "spaces": [
+        {
+          "id": "coventry_1",
+          "allowed_industries": [
+            "brewery"
+          ]
+        },
+        {
+          "id": "coventry_2",
+          "allowed_industries": [
+            "manufacturer",
+            "iron_works"
+          ]
+        },
+        {
+          "id": "coventry_3",
+          "allowed_industries": [
+            "pottery",
+            "manufacturer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worcester",
+      "name": "Worcester",
+      "position": {
+        "x": 0.43,
+        "y": 0.94
+      },
+      "spaces": [
+        {
+          "id": "worcester_1",
+          "allowed_industries": [
+            "cotton_mill"
+          ]
+        },
+        {
+          "id": "worcester_2",
+          "allowed_industries": [
+            "cotton_mill"
+          ]
+        }
+      ]
+    }
+  ],
+  "merchants": [
+    {
+      "id": "warrington",
+      "name": "Warrington",
+      "position": {
+        "x": 0.38,
+        "y": 0.05
+      },
+      "link_icons": 2
+    },
+    {
+      "id": "nottingham",
+      "name": "Nottingham",
+      "position": {
+        "x": 0.88,
+        "y": 0.15
+      },
+      "link_icons": 2
+    },
+    {
+      "id": "shrewsbury",
+      "name": "Shrewsbury",
+      "position": {
+        "x": 0.08,
+        "y": 0.52
+      },
+      "link_icons": 2
+    },
+    {
+      "id": "oxford",
+      "name": "Oxford",
+      "position": {
+        "x": 0.79,
+        "y": 0.89
+      },
+      "link_icons": 2
+    },
+    {
+      "id": "gloucester",
+      "name": "Gloucester",
+      "position": {
+        "x": 0.58,
+        "y": 0.94
+      },
+      "link_icons": 2
+    }
+  ],
+  "routes": [
+    {
+      "id": "warrington_stoke_on_trent",
+      "endpoints": [
+        "warrington",
+        "stoke_on_trent"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stoke_on_trent_leek",
+      "endpoints": [
+        "stoke_on_trent",
+        "leek"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stoke_on_trent_stoke",
+      "endpoints": [
+        "stoke_on_trent",
+        "stoke"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "leek_belper",
+      "endpoints": [
+        "leek",
+        "belper"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "belper_nottingham",
+      "endpoints": [
+        "belper",
+        "nottingham"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "belper_derby",
+      "endpoints": [
+        "belper",
+        "derby"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stoke_uttoxeter",
+      "endpoints": [
+        "stoke",
+        "uttoxeter"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stoke_stafford",
+      "endpoints": [
+        "stoke",
+        "stafford"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stoke_cannock",
+      "endpoints": [
+        "stoke",
+        "cannock"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "uttoxeter_derby",
+      "endpoints": [
+        "uttoxeter",
+        "derby"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "uttoxeter_burton_on_trent",
+      "endpoints": [
+        "uttoxeter",
+        "burton_on_trent"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "derby_burton_on_trent",
+      "endpoints": [
+        "derby",
+        "burton_on_trent"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stafford_cannock",
+      "endpoints": [
+        "stafford",
+        "cannock"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "stafford_burton_on_trent",
+      "endpoints": [
+        "stafford",
+        "burton_on_trent"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "cannock_wolverhampton",
+      "endpoints": [
+        "cannock",
+        "wolverhampton"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "cannock_walsall",
+      "endpoints": [
+        "cannock",
+        "walsall"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "cannock_burton_on_trent",
+      "endpoints": [
+        "cannock",
+        "burton_on_trent"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "burton_on_trent_tamworth",
+      "endpoints": [
+        "burton_on_trent",
+        "tamworth"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "wolverhampton_coalbrookdale",
+      "endpoints": [
+        "wolverhampton",
+        "coalbrookdale"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "wolverhampton_walsall",
+      "endpoints": [
+        "wolverhampton",
+        "walsall"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "wolverhampton_dudley",
+      "endpoints": [
+        "wolverhampton",
+        "dudley"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "coalbrookdale_shrewsbury",
+      "endpoints": [
+        "coalbrookdale",
+        "shrewsbury"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "coalbrookdale_kidderminster",
+      "endpoints": [
+        "coalbrookdale",
+        "kidderminster"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "walsall_birmingham",
+      "endpoints": [
+        "walsall",
+        "birmingham"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "walsall_tamworth",
+      "endpoints": [
+        "walsall",
+        "tamworth"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "tamworth_birmingham",
+      "endpoints": [
+        "tamworth",
+        "birmingham"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "tamworth_nuneaton",
+      "endpoints": [
+        "tamworth",
+        "nuneaton"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "kidderminster_dudley",
+      "endpoints": [
+        "kidderminster",
+        "dudley"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "kidderminster_worcester",
+      "endpoints": [
+        "kidderminster",
+        "worcester"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "dudley_birmingham",
+      "endpoints": [
+        "dudley",
+        "birmingham"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "dudley_redditch",
+      "endpoints": [
+        "dudley",
+        "redditch"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "birmingham_redditch",
+      "endpoints": [
+        "birmingham",
+        "redditch"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "birmingham_coventry",
+      "endpoints": [
+        "birmingham",
+        "coventry"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "birmingham_nuneaton",
+      "endpoints": [
+        "birmingham",
+        "nuneaton"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "nuneaton_coventry",
+      "endpoints": [
+        "nuneaton",
+        "coventry"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "coventry_oxford",
+      "endpoints": [
+        "coventry",
+        "oxford"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "redditch_worcester",
+      "endpoints": [
+        "redditch",
+        "worcester"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "redditch_gloucester",
+      "endpoints": [
+        "redditch",
+        "gloucester"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    },
+    {
+      "id": "worcester_gloucester",
+      "endpoints": [
+        "worcester",
+        "gloucester"
+      ],
+      "supported_eras": [
+        "canal",
+        "rail"
+      ]
+    }
+  ]
+}

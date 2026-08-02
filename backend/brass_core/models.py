@@ -1,74 +1,54 @@
-from dataclasses import dataclass, field
-from enum import Enum
-from typing import List, Optional
+from __future__ import annotations
+
+from dataclasses import dataclass
+from enum import StrEnum
 
 
-class Era(Enum):
+class Era(StrEnum):
     CANAL = "canal"
     RAIL = "rail"
 
 
-class IndustryType(Enum):
-    COAL = "coal"
-    IRON = "iron"
+class IndustryType(StrEnum):
+    COAL_MINE = "coal_mine"
+    IRON_WORKS = "iron_works"
     BREWERY = "brewery"
     MANUFACTURER = "manufacturer"
-    COTTON = "cotton"
+    COTTON_MILL = "cotton_mill"
     POTTERY = "pottery"
 
 
-class PlayerColor(Enum):
-    RED = "red"
-    BLUE = "blue"
-    GREEN = "green"
-    YELLOW = "yellow"
+@dataclass(frozen=True, slots=True)
+class Position:
+    x: float
+    y: float
 
 
-@dataclass
-class Player:
-    id: int
-    name: str
-    color: PlayerColor
-    income: int = 0
-    money: int = 0
-    victory_points: int = 0
-
-
-@dataclass
-class IndustryTile:
-    id: str
-    owner: Optional[PlayerColor]
-    industry: IndustryType
-    level: int
-    flipped: bool = False
-
-
-@dataclass
+@dataclass(frozen=True, slots=True)
 class IndustrySpace:
     id: str
-    allowed_industries: List[IndustryType]
-    tile: Optional[IndustryTile] = None
+    allowed_industries: tuple[IndustryType, ...]
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class Location:
     id: str
     name: str
-    spaces: List[IndustrySpace]
+    position: Position
+    spaces: tuple[IndustrySpace, ...]
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
+class Merchant:
+    id: str
+    name: str
+    position: Position
+    link_icons: int = 2
+
+
+@dataclass(frozen=True, slots=True)
 class Route:
     id: str
-    city1: str
-    city2: str
-    owner: Optional[PlayerColor] = None
-    era: Optional[Era] = None
-
-
-@dataclass
-class GameState:
-    era: Era
-    players: List[Player] = field(default_factory=list)
-    locations: List[Location] = field(default_factory=list)
-    routes: List[Route] = field(default_factory=list)
+    endpoint_a: str
+    endpoint_b: str
+    supported_eras: tuple[Era, ...]
