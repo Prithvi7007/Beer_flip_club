@@ -18,6 +18,13 @@ class IndustryType(StrEnum):
     POTTERY = "pottery"
 
 
+class PlayerColor(StrEnum):
+    PURPLE = "purple"
+    YELLOW = "yellow"
+    ORANGE = "orange"
+    WHITE = "white"
+
+
 @dataclass(frozen=True, slots=True)
 class Position:
     x: float
@@ -52,3 +59,32 @@ class Route:
     endpoint_a: str
     endpoint_b: str
     supported_eras: tuple[Era, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class Player:
+    color: PlayerColor
+    name: str
+    income: int = 0
+    money: int = 0
+    victory_points: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class PlacedRoute:
+    route_id: str
+    owner: PlayerColor
+    era: Era
+
+
+@dataclass(frozen=True, slots=True)
+class PlacedIndustry:
+    space_id: str
+    owner: PlayerColor
+    industry: IndustryType
+    level: int
+    flipped: bool = False
+
+    def __post_init__(self) -> None:
+        if self.level < 1 or self.level > 8:
+            raise ValueError("Industry level must be between 1 and 8.")
