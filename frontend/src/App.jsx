@@ -8,6 +8,26 @@ function boardPosition(value) {
   return 4 + value * 92;
 }
 
+function prettyIndustry(value) {
+  return value
+    .split("_")
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function industryAbbreviation(value) {
+  const abbreviations = {
+    coal_mine: "C",
+    iron_works: "I",
+    brewery: "B",
+    manufacturer: "M",
+    cotton_mill: "CT",
+    pottery: "P",
+  };
+
+  return abbreviations[value] ?? "?";
+}
+
 async function apiRequest(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
     headers: {
@@ -30,32 +50,30 @@ async function apiRequest(path, options = {}) {
   return data;
 }
 
-function prettyIndustry(value) {
-  return value
-    .split("_")
-    .map((part) => part[0].toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
 export default function App() {
   const [boardData, setBoardData] = useState({
     locations: [],
     merchants: [],
     routes: [],
   });
+
   const [game, setGame] = useState({
     era: "canal",
     routes: {},
     industries: {},
     players: [],
   });
+
   const [selected, setSelected] = useState(null);
+  const [selectedSpaceId, setSelectedSpaceId] = useState(null);
+
   const [industryDraft, setIndustryDraft] = useState({
     owner: "purple",
     industry: "",
     level: 1,
     flipped: false,
   });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -67,6 +85,7 @@ export default function App() {
           apiRequest("/board"),
           apiRequest("/game"),
         ]);
+
         setBoardData(loadedBoard);
         setGame(loadedGame);
       } catch (requestError) {
@@ -81,14 +100,33 @@ export default function App() {
 
   const endpoints = useMemo(() => {
     const result = {};
-    for (const location of boardData.locations) result[location.id] = location;
-    for (const merchant of boardData.merchants) result[merchant.id] = merchant;
+
+    for (const location of boardData.locations) {
+      result[location.id] = location;
+    }
+
+    for (const merchant of boardData.merchants) {
+      result[merchant.id] = merchant;
+    }
+
     return result;
   }, [boardData]);
 
-  function selectLocation(location) {
+  const selectedLocation =
+    selected?.type === "location"
+      ? boardData.locations.find((location) => location.id === selected.id)
+      : null;
+
+  const selectedSpace = selectedLocation?.spaces.find(
+    (space) => space.id === selectedSpaceId,
+  );
+
+  function chooseLocation(location) {
     setSelected({ ...location, type: "location" });
+
     const firstSpace = location.spaces[0];
+    setSelectedSpaceId(firstSpace?.id ?? null);
+
     setIndustryDraft({
       owner: "purple",
       industry: firstSpace?.allowed_industries?.[0] ?? "",
@@ -97,14 +135,35 @@ export default function App() {
     });
   }
 
+  function chooseSpace(space) {
+    setSelectedSpaceId(space.id);
+
+    const placed = game.industries[space.id];
+
+    setIndustryDraft({
+      owner: placed?.owner ?? "purple",
+      industry:
+        placed?.industry ??
+        space.allowed_industries[0] ??
+        "",
+      level: placed?.level ?? 1,
+      flipped: placed?.flipped ?? false,
+    });
+  }
+
   async function assignRouteOwner(routeId, color) {
     setSaving(true);
     setError("");
+
     try {
       const updated = await apiRequest(`/game/routes/${routeId}`, {
         method: "PUT",
-        body: JSON.stringify({ owner: color, era: game.era }),
+        body: JSON.stringify({
+          owner: color,
+          era: game.era,
+        }),
       });
+
       setGame(updated);
     } catch (requestError) {
       setError(requestError.message);
@@ -116,10 +175,13 @@ export default function App() {
   async function clearRouteOwner(routeId) {
     setSaving(true);
     setError("");
+
     try {
-      await apiRequest(`/game/routes/${routeId}`, { method: "DELETE" });
-      const updated = await apiRequest("/game");
-      setGame(updated);
+      await apiRequest(`/game/routes/${routeId}`, {
+        method: "DELETE",
+      });
+
+      setGame(await apiRequest("/game"));
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -127,16 +189,23 @@ export default function App() {
     }
   }
 
-  async function placeIndustry(space) {
-    if (!industryDraft.industry) return;
+  async function saveIndustry() {
+    if (!selectedSpace || !industryDraft.industry) {
+      return;
+    }
 
     setSaving(true);
     setError("");
+
     try {
-      const updated = await apiRequest(`/game/industries/${space.id}`, {
-        method: "PUT",
-        body: JSON.stringify(industryDraft),
-      });
+      const updated = await apiRequest(
+        `/game/industries/${selectedSpace.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(industryDraft),
+        },
+      );
+
       setGame(updated);
     } catch (requestError) {
       setError(requestError.message);
@@ -148,10 +217,13 @@ export default function App() {
   async function clearIndustry(spaceId) {
     setSaving(true);
     setError("");
+
     try {
-      await apiRequest(`/game/industries/${spaceId}`, { method: "DELETE" });
-      const updated = await apiRequest("/game");
-      setGame(updated);
+      await apiRequest(`/game/industries/${spaceId}`, {
+        method: "DELETE",
+      });
+
+      setGame(await apiRequest("/game"));
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -162,10 +234,16 @@ export default function App() {
   async function startNewGame() {
     setSaving(true);
     setError("");
+
     try {
-      const updated = await apiRequest("/game/new", { method: "POST" });
-      setGame(updated);
+      setGame(
+        await apiRequest("/game/new", {
+          method: "POST",
+        }),
+      );
+
       setSelected(null);
+      setSelectedSpaceId(null);
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -173,17 +251,18 @@ export default function App() {
     }
   }
 
-  if (loading) return <main className="page-state">Loading Brass board…</main>;
+  if (loading) {
+    return <main className="page-state">Loading digital board…</main>;
+  }
 
   return (
     <main className="app-shell">
-      <header className="app-header">
+      <header className="topbar">
         <div>
           <p className="eyebrow">Beer Flip</p>
           <h1>Brass: Birmingham</h1>
-          <p>
-            Backend-owned game state · {boardData.locations.length} locations ·{" "}
-            {boardData.routes.length} routes
+          <p className="subtitle">
+            Digital board · Backend-owned game state
           </p>
         </div>
 
@@ -199,8 +278,14 @@ export default function App() {
 
       {error && <div className="error-banner">{error}</div>}
 
-      <section className="board-panel">
-        <div className="board">
+      <section className="workspace">
+        <div className="board-frame">
+          <img
+            className="board-image"
+            src="/brass-birmingham-board.jpg"
+            alt="Brass Birmingham board"
+          />
+
           <svg
             className="route-layer"
             viewBox="0 0 100 100"
@@ -209,11 +294,15 @@ export default function App() {
             {boardData.routes.map((route) => {
               const start = endpoints[route.endpoint_a];
               const end = endpoints[route.endpoint_b];
-              if (!start || !end) return null;
+
+              if (!start || !end) {
+                return null;
+              }
 
               const owner = game.routes[route.id]?.owner;
               const isSelected =
-                selected?.type === "route" && selected.id === route.id;
+                selected?.type === "route" &&
+                selected.id === route.id;
 
               return (
                 <g key={route.id}>
@@ -232,6 +321,7 @@ export default function App() {
                       })
                     }
                   />
+
                   <line
                     className={[
                       "route",
@@ -250,234 +340,304 @@ export default function App() {
             })}
           </svg>
 
-          {boardData.merchants.map((merchant) => (
-            <button
-              key={merchant.id}
-              className={`merchant ${
-                selected?.id === merchant.id ? "selected" : ""
-              }`}
-              style={{
-                left: `${boardPosition(merchant.x)}%`,
-                top: `${boardPosition(merchant.y)}%`,
-              }}
-              onClick={() => setSelected({ ...merchant, type: "merchant" })}
-              type="button"
-            >
-              <span>{merchant.name}</span>
-              <small>{merchant.link_icons} link icons</small>
-            </button>
-          ))}
-
           {boardData.locations.map((location) => {
-            const placedCount = location.spaces.filter(
-              (space) => game.industries[space.id],
-            ).length;
+            const placedTiles = location.spaces
+              .map((space) => game.industries[space.id])
+              .filter(Boolean);
 
             return (
               <button
                 key={location.id}
-                className={`location ${
-                  selected?.id === location.id ? "selected" : ""
-                }`}
+                className={[
+                  "city-hotspot",
+                  selected?.id === location.id ? "selected" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 style={{
                   left: `${boardPosition(location.x)}%`,
                   top: `${boardPosition(location.y)}%`,
                 }}
-                onClick={() => selectLocation(location)}
+                onClick={() => chooseLocation(location)}
                 type="button"
+                aria-label={`Open ${location.name}`}
               >
-                <span>{location.name}</span>
-                <small>
-                  {placedCount}/{location.spaces.length} placed
-                </small>
+                {placedTiles.length > 0 && (
+                  <span className="tile-cluster">
+                    {placedTiles.map((tile) => (
+                      <span
+                        key={tile.space_id}
+                        className={`mini-tile ${tile.owner} ${
+                          tile.flipped ? "flipped" : ""
+                        }`}
+                      >
+                        {industryAbbreviation(tile.industry)}
+                        {tile.level}
+                      </span>
+                    ))}
+                  </span>
+                )}
               </button>
             );
           })}
+
+          {boardData.merchants.map((merchant) => (
+            <button
+              key={merchant.id}
+              className={[
+                "merchant-hotspot",
+                selected?.id === merchant.id ? "selected" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              style={{
+                left: `${boardPosition(merchant.x)}%`,
+                top: `${boardPosition(merchant.y)}%`,
+              }}
+              onClick={() =>
+                setSelected({
+                  ...merchant,
+                  type: "merchant",
+                })
+              }
+              type="button"
+              aria-label={`Open ${merchant.name}`}
+            />
+          ))}
         </div>
 
-        <aside className="details-panel">
+        <aside className="drawer">
           {!selected && (
-            <>
+            <div className="empty-drawer">
               <p className="eyebrow">Board inspector</p>
-              <h2>Select something</h2>
-              <p>Click a location, merchant, or route.</p>
-            </>
+              <h2>Select the board</h2>
+              <p>
+                Click a city, route, or merchant directly on the image.
+              </p>
+            </div>
           )}
 
           {selected?.type === "merchant" && (
             <>
-              <p className="eyebrow">Selected merchant</p>
+              <p className="eyebrow">Merchant</p>
               <h2>{selected.name}</h2>
-              <p>Link icons: {selected.link_icons}</p>
+              <p>{selected.link_icons} printed link icons</p>
               <code>{selected.id}</code>
             </>
           )}
 
           {selected?.type === "route" && (
             <>
-              <p className="eyebrow">Selected route</p>
+              <p className="eyebrow">Route</p>
+
               <h2 className="route-title">
                 {selected.endpointAName}
                 <span>↕</span>
                 {selected.endpointBName}
               </h2>
+
               <code>{selected.id}</code>
 
-              <div className="owner-picker">
-                <p>Assign owner</p>
-                <div className="owner-buttons">
+              <section className="drawer-section">
+                <h3>Assign owner</h3>
+
+                <div className="color-grid">
                   {PLAYER_COLORS.map((color) => (
                     <button
                       key={color}
                       type="button"
-                      className={`owner-button ${color}`}
-                      onClick={() => assignRouteOwner(selected.id, color)}
+                      className={`color-choice ${color}`}
+                      onClick={() =>
+                        assignRouteOwner(selected.id, color)
+                      }
                       disabled={saving}
                     >
+                      <span className="color-swatch" />
                       {color}
                     </button>
                   ))}
-                  <button
-                    type="button"
-                    className="owner-button clear"
-                    onClick={() => clearRouteOwner(selected.id)}
-                    disabled={saving}
-                  >
-                    Clear
-                  </button>
                 </div>
-              </div>
+
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={() => clearRouteOwner(selected.id)}
+                  disabled={saving}
+                >
+                  Clear route
+                </button>
+              </section>
             </>
           )}
 
-          {selected?.type === "location" && (
+          {selected?.type === "location" && selectedLocation && (
             <>
-              <p className="eyebrow">Selected location</p>
-              <h2>{selected.name}</h2>
+              <p className="eyebrow">City</p>
+              <h2>{selectedLocation.name}</h2>
 
-              <div className="space-list">
-                {selected.spaces.map((space) => {
+              <div className="space-tabs">
+                {selectedLocation.spaces.map((space, index) => {
                   const placed = game.industries[space.id];
 
                   return (
-                    <article className="space-card" key={space.id}>
-                      <div className="space-card-header">
-                        <div>
-                          <strong>{space.id}</strong>
-                          <small>
-                            {space.allowed_industries
-                              .map(prettyIndustry)
-                              .join(" / ")}
-                          </small>
-                        </div>
-
-                        {placed && (
-                          <span className={`tile-owner-dot ${placed.owner}`} />
-                        )}
-                      </div>
-
-                      {placed ? (
-                        <div className="placed-tile">
-                          <p>
-                            <strong>{prettyIndustry(placed.industry)}</strong>
-                          </p>
-                          <p>
-                            {placed.owner} · Level {placed.level} ·{" "}
-                            {placed.flipped ? "Flipped" : "Unflipped"}
-                          </p>
-                          <button
-                            type="button"
-                            className="danger-button"
-                            onClick={() => clearIndustry(space.id)}
-                            disabled={saving}
-                          >
-                            Remove tile
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="industry-form">
-                          <label>
-                            Industry
-                            <select
-                              value={industryDraft.industry}
-                              onChange={(event) =>
-                                setIndustryDraft((current) => ({
-                                  ...current,
-                                  industry: event.target.value,
-                                }))
-                              }
-                            >
-                              {space.allowed_industries.map((industry) => (
-                                <option value={industry} key={industry}>
-                                  {prettyIndustry(industry)}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-
-                          <label>
-                            Owner
-                            <select
-                              value={industryDraft.owner}
-                              onChange={(event) =>
-                                setIndustryDraft((current) => ({
-                                  ...current,
-                                  owner: event.target.value,
-                                }))
-                              }
-                            >
-                              {PLAYER_COLORS.map((color) => (
-                                <option value={color} key={color}>
-                                  {color}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-
-                          <label>
-                            Level
-                            <input
-                              type="number"
-                              min="1"
-                              max="8"
-                              value={industryDraft.level}
-                              onChange={(event) =>
-                                setIndustryDraft((current) => ({
-                                  ...current,
-                                  level: Number(event.target.value),
-                                }))
-                              }
-                            />
-                          </label>
-
-                          <label className="checkbox-label">
-                            <input
-                              type="checkbox"
-                              checked={industryDraft.flipped}
-                              onChange={(event) =>
-                                setIndustryDraft((current) => ({
-                                  ...current,
-                                  flipped: event.target.checked,
-                                }))
-                              }
-                            />
-                            Flipped
-                          </label>
-
-                          <button
-                            type="button"
-                            className="place-button"
-                            onClick={() => placeIndustry(space)}
-                            disabled={saving}
-                          >
-                            Place tile
-                          </button>
-                        </div>
-                      )}
-                    </article>
+                    <button
+                      key={space.id}
+                      type="button"
+                      className={[
+                        "space-tab",
+                        selectedSpaceId === space.id ? "active" : "",
+                        placed ? `occupied ${placed.owner}` : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => chooseSpace(space)}
+                    >
+                      {index + 1}
+                    </button>
                   );
                 })}
               </div>
+
+              {selectedSpace && (
+                <section className="drawer-section">
+                  <div className="space-heading">
+                    <div>
+                      <h3>Industry space</h3>
+                      <code>{selectedSpace.id}</code>
+                    </div>
+
+                    {game.industries[selectedSpace.id] && (
+                      <span
+                        className={`large-owner-dot ${
+                          game.industries[selectedSpace.id].owner
+                        }`}
+                      />
+                    )}
+                  </div>
+
+                  <label>
+                    Industry
+                    <select
+                      value={industryDraft.industry}
+                      onChange={(event) =>
+                        setIndustryDraft((current) => ({
+                          ...current,
+                          industry: event.target.value,
+                        }))
+                      }
+                    >
+                      {selectedSpace.allowed_industries.map(
+                        (industry) => (
+                          <option value={industry} key={industry}>
+                            {prettyIndustry(industry)}
+                          </option>
+                        ),
+                      )}
+                    </select>
+                  </label>
+
+                  <label>
+                    Level
+                    <div className="level-stepper">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setIndustryDraft((current) => ({
+                            ...current,
+                            level: Math.max(1, current.level - 1),
+                          }))
+                        }
+                      >
+                        −
+                      </button>
+
+                      <strong>{industryDraft.level}</strong>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setIndustryDraft((current) => ({
+                            ...current,
+                            level: Math.min(8, current.level + 1),
+                          }))
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </label>
+
+                  <fieldset>
+                    <legend>Owner</legend>
+
+                    <div className="color-grid">
+                      {PLAYER_COLORS.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          className={[
+                            "color-choice",
+                            color,
+                            industryDraft.owner === color
+                              ? "active"
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                          onClick={() =>
+                            setIndustryDraft((current) => ({
+                              ...current,
+                              owner: color,
+                            }))
+                          }
+                        >
+                          <span className="color-swatch" />
+                          {color}
+                        </button>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <label className="toggle-row">
+                    <span>Flipped</span>
+
+                    <input
+                      type="checkbox"
+                      checked={industryDraft.flipped}
+                      onChange={(event) =>
+                        setIndustryDraft((current) => ({
+                          ...current,
+                          flipped: event.target.checked,
+                        }))
+                      }
+                    />
+                  </label>
+
+                  <button
+                    type="button"
+                    className="primary-button"
+                    onClick={saveIndustry}
+                    disabled={saving}
+                  >
+                    {game.industries[selectedSpace.id]
+                      ? "Update tile"
+                      : "Place tile"}
+                  </button>
+
+                  {game.industries[selectedSpace.id] && (
+                    <button
+                      type="button"
+                      className="danger-button"
+                      onClick={() =>
+                        clearIndustry(selectedSpace.id)
+                      }
+                      disabled={saving}
+                    >
+                      Remove tile
+                    </button>
+                  )}
+                </section>
+              )}
             </>
           )}
         </aside>
